@@ -22,3 +22,7 @@ test.csv
 # OS
 Thumbs.db
 .DS_Store
+
+# Publishing
+dist/
+build/

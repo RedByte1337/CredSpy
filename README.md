@@ -1,3 +1,9 @@
+[![PyPi Version](https://img.shields.io/pypi/v/CredSpy.svg)](https://pypi.org/project/CredSpy/)
+![Python Version](https://img.shields.io/badge/python-3.10+-blue.svg)
+[![GitHub Sponsors](https://img.shields.io/github/sponsors/RedByte1337?style=flat&logo=githubsponsors)](https://github.com/sponsors/RedByte1337)
+[![Twitter](https://img.shields.io/twitter/follow/RedByte1337?label=RedByte1337&style=social)](https://twitter.com/intent/follow?screen_name=RedByte1337)
+[![LinkedIn](https://img.shields.io/badge/in-Keanu_Nys-white?style=flat&logoColor=blue&labelColor=blue)](https://www.linkedin.com/in/keanunys/)
+
 # CredSpy
 
 Enumerate Microsoft Entra ID authentication methods for email addresses using the public `GetCredentialType` API. This is the same endpoint the Microsoft login page uses when you enter a username. In contrast to most tools using the GetCredentialType method, CredSpy also shows the authentication methods supported for existing accounts.
@@ -21,14 +27,22 @@ Requires Python 3.10+.
 **pipx** (recommended):
 
 ```bash
-# From a local clone
-pipx install .
+# Install pipx (skip this if you already have it)
+apt install pipx
+pipx ensurepath
+```
 
-# From GitHub
+```bash
+# From PyPI (recommended)
+pipx install credspy
+
+# Or from GitHub
 pipx install git+https://github.com/RedByte1337/CredSpy.git
 
-# From PyPI (after publishing)
-pipx install credspy
+# From a local clone
+git clone https://github.com/RedByte1337/CredSpy.git
+cd CredSpy
+pipx install .
 ```
 
 **pip**:
