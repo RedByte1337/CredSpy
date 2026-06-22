@@ -101,13 +101,18 @@ If any output file already exists, you are prompted to confirm overwrite (`Y/n`)
 Results stream to the terminal as each email is checked:
 
 ```
-redbyte@e-corp.com              | Preferred: Fido (7)     | Supported: Password, RemoteNGC (PushNotification), Fido (Count: 3)
+redbyte@e-corp.com              | Preferred: Fido (7)       | Supported: Password, RemoteNGC (PushNotification), Fido (Count: 3)
 nonexist@e-corp.com             | IfExistsResult: NotExist (1)
-admin@e-corp.com              | Preferred: Password (1)     | Supported: Password, RemoteNGC (PushNotification)
+admin@e-corp.com                | Preferred: Password (1)   | Supported: Password, RemoteNGC (PushNotification)
+alice@e-corp.com                | Preferred: RemoteNGC (2)  | Supported: Password, RemoteNGC (PushNotification)
+bob@e-corp.com                  | Preferred: Fido (7)       | Supported: Password, Fido (Count: 5), Certificate
 ```
 
-For fido authentication, the number of entries in the AllowList of the FidoParams returned by Microsoft is shown. This can be used as an indicator to know how many Fido auth methods the user has enrolled. However, it seems like this also includes deleted Fido keys which are not linked to the account anymore. 
+If the email account exists, the first column after the email address will show the preferred authentication method for the user. The last column will list the other supported authentication methods such as Password, RemoteNGC, Fido (=PassKeys), and Certificate authentication.
 
+All of this information is very useful to take into consideration when preparing for phishing attacks.
+
+For fido authentication, the number of entries in the AllowList of the FidoParams returned by Microsoft is shown. This can be used as an indicator to know how many Fido auth methods the user has enrolled. However, it seems like this also includes deleted Fido keys which are not linked to the account anymore. 
 
 A summary is printed at the end:
 
