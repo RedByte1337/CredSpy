@@ -1,0 +1,25 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "credspy"
+dynamic = ["version"]
+description = "Entra ID user enumeration and auth method discovery via the public GetCredentialType API"
+readme = "README.md"
+license = {text = "BSD-3-Clause"}
+requires-python = ">=3.10"
+dependencies = ["requests"]
+authors = [{name = "RedByte1337"}]
+
+[project.urls]
+repository = "https://github.com/RedByte1337/CredSpy"
+
+[project.scripts]
+credspy = "credspy:cli"
+
+[tool.hatch.version]
+path = "credspy.py"
+
+[tool.hatch.build.targets.wheel]
+only-include = ["credspy.py"]

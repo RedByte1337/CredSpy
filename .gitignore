@@ -1,0 +1,24 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+env/
+
+# IDE
+.vscode/
+.idea/
+
+# Local output (do not commit enumeration results)
+*.csv
+*-users.txt
+existing.txt
+ngc.txt
+phishable-users.txt
+tests
+test.csv
+
+# OS
+Thumbs.db
+.DS_Store
