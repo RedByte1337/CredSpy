@@ -31,6 +31,10 @@ IF_EXISTS = {
     -1: "Unknown", 0: "Exists", 1: "NotExist", 2: "Throttled", 4: "Error",
     5: "ExistsInOtherMicrosoftIDP", 6: "ExistsBothIDPs", 8: "ExistsInAcma",
 }
+
+# Codes the JS signin client treats as a valid: 
+# > Exists/ExistsBothIDPs/ExistsInOtherMicrosoftIDP/ExistsInAcma
+EXISTS_CODES = frozenset({0, 5, 6, 8})
 DOMAIN_TYPE = {1: "Unknown", 2: "Consumer", 3: "Managed", 4: "Federated", 5: "CloudFederated"}
 THROTTLE_STATUS = {0: "NotThrottled", 1: "AadThrottled", 2: "MsaThrottled"}
 CREDENTIAL_TYPE = {
@@ -76,6 +80,11 @@ class Result:
     pref: Any
     domain: Any
     supported: Supported
+
+    @property
+    def exists(self) -> bool:
+        """True for all IfExistsResult values the ESTS client treats as a real account."""
+        return self.if_exists in EXISTS_CODES
 
 
 def cv(text: str, code: str | None, on: bool) -> str:
@@ -165,11 +174,11 @@ def pref_color(pref: Any) -> str | None:
 
 def format_line(r: Result, *, color_on: bool, email_width: int) -> str:
     throttled = r.throttle not in (None, 0)
-    ok = r.if_exists == 0 and not throttled
+    ok = r.exists and not throttled
     use_color = color_on and ok
     display = pad(r.display, email_width)
 
-    if r.if_exists != 0:
+    if not r.exists:
         line = f"{display} | IfExistsResult: {enum_label(r.if_exists, IF_EXISTS)}"
     else:
         pref_col = pad(
@@ -182,7 +191,7 @@ def format_line(r: Result, *, color_on: bool, email_width: int) -> str:
 
     if throttled:
         line += f" | ThrottleStatus: {enum_label(r.throttle, THROTTLE_STATUS)}"
-    if r.if_exists != 0 or throttled:
+    if not r.exists or throttled:
         return cv(line, R, color_on)
     return line
 
@@ -199,7 +208,7 @@ def record_stats(stats: dict, r: Result) -> None:
     stats["total"] += 1
     if r.throttle not in (None, 0):
         stats["throttled"] += 1
-    if r.if_exists != 0:
+    if not r.exists:
         return
     stats["exists"] += 1
     stats["pref"][enum_name(r.pref, CREDENTIAL_TYPE)] += 1
@@ -250,13 +259,13 @@ def confirm_overwrite(paths: list[str]) -> bool:
 
 def write_saves(r: Result, saves: dict, counts: dict) -> None:
     line = r.display + "\n"
-    if saves.get("existing") and r.if_exists == 0:
+    if saves.get("existing") and r.exists:
         saves["existing"].write(line)
         counts["existing"] += 1
     if saves.get("ngc") and supported_active(r.supported, "remote_ngc"):
         saves["ngc"].write(line)
         counts["ngc"] += 1
-    if saves.get("password_preferred") and r.if_exists == 0 and r.pref == 1:
+    if saves.get("password_preferred") and r.exists and r.pref == 1:
         saves["password_preferred"].write(line)
         counts["password_preferred"] += 1
 
