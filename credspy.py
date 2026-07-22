@@ -14,7 +14,7 @@ from typing import Any
 import requests
 import urllib3
 
-__version__ = "1.0.0"
+__version__ = "1.1.0"
 
 CLIENT_ID = "4765445b-32c6-49b0-83e6-1d93765276ca"
 AUTHORIZE_URL = (
