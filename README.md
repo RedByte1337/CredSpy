@@ -96,9 +96,9 @@ credspy emails.txt \
 | `--skip-ngc` | Disable RemoteNGC checks (avoids push notifications when RemoteNGC is the preferred method; this also disables NGC discovery) |
 
 > [!IMPORTANT]
-> In the rare case the user has RemoteNGC set as their primary method, then Microsoft will instantly trigger the RemoteNGC push notification to the Authenticator app during enumeration. 
-> The only way to avoid this is to set `isRemoteNGCSupported` to false in the `GetCredentialType` request. This has the consequence that the response will not return anymore whether RemoteNGC is supported.
-> If you want to avoid sending out any automatic notifications and you do not care about the RemoteNGC option, use the `--skip-ngc` flah
+> In the rare case that the user has RemoteNGC set as their primary method, then Microsoft will instantly trigger the RemoteNGC push notification to the Authenticator app during enumeration. 
+> The only way to avoid this is to set `isRemoteNGCSupported` to false in the `GetCredentialType` request. This has the consequence that the response will no longer return whether RemoteNGC is supported.
+> If you want to avoid sending out any automatic notifications and you do not need the RemoteNGC discovery, use the `--skip-ngc` flag.
 
 If any output file already exists, you are prompted to confirm overwrite (`Y/n`).
 
@@ -108,7 +108,7 @@ Results stream to the terminal as each email is checked:
 
 ```
 redbyte@e-corp.com       | Preferred: Fido (7)       | Supported: Password, RemoteNGC (PushNotification), Fido (Count: 3)
-nonexistant@e-corp.com   | IfExistsResult: NotExist (1)
+nonexistent@e-corp.com   | IfExistsResult: NotExist (1)
 admin@e-corp.com         | Preferred: Password (1)   | Supported: Password, RemoteNGC (PushNotification)
 alice@e-corp.com         | Preferred: RemoteNGC (2)  | Supported: Password, RemoteNGC (PushNotification)
 bob@e-corp.com           | Preferred: Fido (7)       | Supported: Password, Fido (Count: 5), Certificate
@@ -118,7 +118,7 @@ If the email account exists, the first column after the email address will show 
 
 All of this information is very useful to take into consideration when preparing for phishing attacks.
 
-For fido authentication, the number of entries in the AllowList of the FidoParams returned by Microsoft is shown. This can be used as an indicator to know how many Fido auth methods the user has enrolled. However, it seems like this also includes deleted Fido keys which are not linked to the account anymore. 
+For Fido authentication, the number of entries in the AllowList of the FidoParams returned by Microsoft is shown. This can be used as an indicator to know how many Fido auth methods the user has enrolled. However, it seems like this also includes deleted Fido keys which are not linked to the account anymore. 
 
 A summary is printed at the end:
 
