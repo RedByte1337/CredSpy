@@ -307,10 +307,10 @@ def fetch_ctx(session: requests.Session) -> str | None:
     return None
 
 
-def query(session: requests.Session, email: str, ctx: str | None) -> tuple[dict | None, int]:
+def query(session: requests.Session, email: str, ctx: str | None, *, skip_ngc: bool = False) -> tuple[dict | None, int]:
     payload = {
         "username": email, "isOtherIdpSupported": True, "checkPhones": False,
-        "isRemoteNGCSupported": True, "isCookieBannerShown": False, "isFidoSupported": True,
+        "isRemoteNGCSupported": not skip_ngc, "isCookieBannerShown": False, "isFidoSupported": True,
         "country": "US", "forceotclogin": False, "isExternalFederationDisallowed": False,
         "isRemoteConnectSupported": False, "federationFlags": 0, "isSignup": False,
         "isAccessPassSupported": True, "isQrCodePinSupported": True,
@@ -340,12 +340,13 @@ def main() -> int:
     )
     p.add_argument("--version", action="version", version=f"%(prog)s {__version__}")
     p.add_argument("target", help="Email address or text file (one per line)")
-    p.add_argument("--proxy", help="Proxy URL; disables SSL verification")
+    p.add_argument("--proxy", help="Proxy URL; disables SSL verification (Format: 'http://127.0.0.1:8080')")
     p.add_argument("--no-color", action="store_true")
     p.add_argument("--csv", metavar="FILE", help="Write results to CSV")
     p.add_argument("--save-existing", metavar="FILE", help="Save emails which exist to file")
     p.add_argument("--save-ngc", metavar="FILE", help="Save emails with RemoteNGC support to file")
     p.add_argument("--save-password-preferred", metavar="FILE", help="Save emails with password as preferred method to file")
+    p.add_argument("--skip-ngc", action="store_true", help="Disable RemoteNGC checks (avoids push notifications when RemoteNGC is preferred)")
     args = p.parse_args()
     color_on = not args.no_color and sys.stdout.isatty()
 
@@ -391,7 +392,7 @@ def main() -> int:
     # Query each email and collect results
     for email in emails:
         try:
-            data, status = query(session, email, ctx)
+            data, status = query(session, email, ctx, skip_ngc=args.skip_ngc)
             if data is None:
                 print(cv(f"[-] {email}: HTTP {status}", R, color_on), file=sys.stderr)
                 continue

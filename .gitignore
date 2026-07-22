@@ -18,6 +18,7 @@ ngc.txt
 phishable-users.txt
 tests
 test.csv
+tests/*
 
 # OS
 Thumbs.db

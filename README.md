@@ -87,12 +87,18 @@ credspy emails.txt \
 | Flag | Description |
 |------|-------------|
 | `target` | Email address or path to a text file |
-| `--proxy URL` | Route all traffic through a proxy; disables SSL verification |
+| `--proxy URL` | Route all traffic through a proxy; disables SSL verification (Format: `http://127.0.0.1:8080`) |
 | `--no-color` | Disable colored terminal output |
 | `--csv FILE` | Write results to CSV |
 | `--save-existing FILE` | Save emails that exist |
 | `--save-ngc FILE` | Save emails with RemoteNGC (e.g. passwordless push-notification) supported |
 | `--save-password-preferred FILE` | Save existing emails with password as preferred method |
+| `--skip-ngc` | Disable RemoteNGC checks (avoids push notifications when RemoteNGC is the preferred method; this also disables NGC discovery) |
+
+> [!IMPORTANT]
+> In the rare case the user has RemoteNGC set as their primary method, then Microsoft will instantly trigger the RemoteNGC push notification to the Authenticator app during enumeration. 
+> The only way to avoid this is to set `isRemoteNGCSupported` to false in the `GetCredentialType` request. This has the consequence that the response will not return anymore whether RemoteNGC is supported.
+> If you want to avoid sending out any automatic notifications and you do not care about the RemoteNGC option, use the `--skip-ngc` flah
 
 If any output file already exists, you are prompted to confirm overwrite (`Y/n`).
 
@@ -101,11 +107,11 @@ If any output file already exists, you are prompted to confirm overwrite (`Y/n`)
 Results stream to the terminal as each email is checked:
 
 ```
-redbyte@e-corp.com              | Preferred: Fido (7)       | Supported: Password, RemoteNGC (PushNotification), Fido (Count: 3)
-nonexist@e-corp.com             | IfExistsResult: NotExist (1)
-admin@e-corp.com                | Preferred: Password (1)   | Supported: Password, RemoteNGC (PushNotification)
-alice@e-corp.com                | Preferred: RemoteNGC (2)  | Supported: Password, RemoteNGC (PushNotification)
-bob@e-corp.com                  | Preferred: Fido (7)       | Supported: Password, Fido (Count: 5), Certificate
+redbyte@e-corp.com       | Preferred: Fido (7)       | Supported: Password, RemoteNGC (PushNotification), Fido (Count: 3)
+nonexistant@e-corp.com   | IfExistsResult: NotExist (1)
+admin@e-corp.com         | Preferred: Password (1)   | Supported: Password, RemoteNGC (PushNotification)
+alice@e-corp.com         | Preferred: RemoteNGC (2)  | Supported: Password, RemoteNGC (PushNotification)
+bob@e-corp.com           | Preferred: Fido (7)       | Supported: Password, Fido (Count: 5), Certificate
 ```
 
 If the email account exists, the first column after the email address will show the preferred authentication method for the user. The last column will list the other supported authentication methods such as Password, RemoteNGC, Fido (=PassKeys), and Certificate authentication.
