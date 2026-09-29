@@ -13,6 +13,7 @@ from typing import Any
 
 import requests
 import urllib3
+import time
 
 __version__ = "1.1.0"
 
@@ -32,7 +33,7 @@ IF_EXISTS = {
     5: "ExistsInOtherMicrosoftIDP", 6: "ExistsBothIDPs", 8: "ExistsInAcma",
 }
 
-# Codes the JS signin client treats as a valid: 
+# Codes the JS signin client treats as a valid:
 # > Exists/ExistsBothIDPs/ExistsInOtherMicrosoftIDP/ExistsInAcma
 EXISTS_CODES = frozenset({0, 5, 6, 8})
 DOMAIN_TYPE = {1: "Unknown", 2: "Consumer", 3: "Managed", 4: "Federated", 5: "CloudFederated"}
@@ -347,6 +348,7 @@ def main() -> int:
     p.add_argument("--save-ngc", metavar="FILE", help="Save emails with RemoteNGC support to file")
     p.add_argument("--save-password-preferred", metavar="FILE", help="Save emails with password as preferred method to file")
     p.add_argument("--skip-ngc", action="store_true", help="Disable RemoteNGC checks (avoids push notifications when RemoteNGC is preferred)")
+    p.add_argument("--delay",type=float, default=0, help="Delay between queries in seconds (default 0)")
     args = p.parse_args()
     color_on = not args.no_color and sys.stdout.isatty()
 
@@ -405,6 +407,8 @@ def main() -> int:
             write_saves(result, saves, out_counts)
         except requests.RequestException as e:
             print(cv(f"[-] {email}: {e}", R, color_on), file=sys.stderr)
+        if args.delay:
+            time.sleep(args.delay)
 
     # Print summary
     if csv_f:
