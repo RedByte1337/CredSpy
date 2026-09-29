@@ -94,6 +94,7 @@ credspy emails.txt \
 | `--save-ngc FILE` | Save emails with RemoteNGC (e.g. passwordless push-notification) supported |
 | `--save-password-preferred FILE` | Save existing emails with password as preferred method |
 | `--skip-ngc` | Disable RemoteNGC checks (avoids push notifications when RemoteNGC is the preferred method; this also disables NGC discovery) |
+| `--delay <float>` | Sleeps for the provided amount of seconds between each account. Use when checking a large number of accounts to avoid throttling |
 
 > [!IMPORTANT]
 > In the rare case that the user has RemoteNGC set as their primary method, then Microsoft will instantly trigger the RemoteNGC push notification to the Authenticator app during enumeration. 
